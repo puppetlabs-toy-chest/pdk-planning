@@ -10,10 +10,10 @@ A repository of roadmaps, feature proposals, and other planning resources for th
 
 ## Project Goals
 
-- Grow the Puppet community by making it easier for users to develop, test and share high-quality Puppet modules and
+- Grow the Puppet community by making it easier for users to develop, test, and share high-quality Puppet modules and
   other relevant content
 - Provide a prescriptive path for writing and testing Puppet code
-- Offer a single, coherent and beautiful user interface to the best Puppet development tools
+- Offer a single, coherent, and beautiful user interface to the best Puppet development tools
 - Enable anyone to have a robust and native Puppet development environment as quickly and easily as possible
 
 ## Roadmap
@@ -35,16 +35,16 @@ enter the project.
 
 ### When you need to follow this process
 
-You need to follow this process if you intend to make "substantial", changes to PDK, it's associated [templates], or
+You need to follow this process if you intend to make "substantial" changes to PDK, its associated [templates], or
 [packaging configuration].  What constitutes a "substantial" change is evolving based on community norms, but *may*
 include the following:
 
-  - Introduction of a new subcommand, subcommand action, option or flag
+  - Introduction of a new subcommand, subcommand action, option, or flag
   - Anything that could result in a non-trivial and user-visible change to the expected behavior of an existing feature
 
 Some changes do not require an RFC, for example:
 
-  - Rephrasing, reorganizing or refactoring
+  - Rephrasing, reorganizing, or refactoring
   - Bug fixes or functional changes to an existing feature when the current behavior is clearly incorrect or
     unintentional (particularly when the existing behavior is not reasonably useful to anyone)
   - Modification of unstructured (i.e. not JSON, JUnit, etc.) output, or other minor UX improvements
@@ -66,7 +66,7 @@ In short, to get a major feature added to PDK, one must first get an RFC describ
 a markdown file. At that point the RFC is 'active' and may be implemented with the goal of eventual inclusion into PDK.
 
   * Fork the pdk-planning repo http://github.com/puppetlabs/pdk-planning
-  * Copy `0000-rfc-template.md` to `RFCs/0000-my-feature.md` (where 'my-feature' is descriptive. don't assign an RFC
+  * Copy `0000-rfc-template.md` to `RFCs/0000-my-feature.md` (where 'my-feature' is descriptive, don't assign an RFC
     number yet).
   * Fill in the RFC. Put care into the details: **RFCs that do not present convincing motivation, demonstrate
     understanding of the impact of the design, or are disingenuous about the drawbacks or alternatives are likely to
