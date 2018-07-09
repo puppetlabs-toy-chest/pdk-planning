@@ -118,7 +118,7 @@ already working on it, feel free to ask (e.g. by leaving a comment on the associ
 [Roadmap]: #roadmap
 [Project Goals]: #project-goals
 [RFCs]: #rfcs
-[Puppet Developement Kit]: https://github.com/puppetlabs/pdk
+[Puppet Development Kit]: https://github.com/puppetlabs/pdk
 [templates]: https://github.com/puppetlabs/pdk-templates
 [packaging configuration]: https://github.com/puppetlabs/pdk-vanagon
 [PDK maintainers]: mailto:pdk-maintainers@puppet.com
