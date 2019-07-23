@@ -49,3 +49,12 @@ PS> .\tools\SyncProjects.ps1
 ```
 
 **WARNING** If you run the script with the Verbose flag (`-Verbose`) it is possible your GitHub Token could be output to the console in cleartext
+
+Alternately, if you are running PowerShell on macOS or Linux, you can invoke the script like this:
+
+```bash
+pwsh -File tools/SyncProjects.ps1
+```
+
+which will inherit your parent shell's environment variables (such as previously exported `GITHUB_USERNAME/TOKEN`).
+
