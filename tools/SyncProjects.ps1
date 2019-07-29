@@ -163,6 +163,10 @@ $($issue.Summary)
       }
       # There's probably more than this for in progress...
       if ($Issue.Status -eq 'In progress') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for merge') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for test') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for ci') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for review') { $hash['expectedColumn'] = 'In progress'}
       if ($Issue.Status -eq 'Closed') { $hash['expectedColumn'] = 'Done'}
       if ($Issue.Status -eq 'Resolved') { $hash['expectedColumn'] = 'Done'}
       if ($Issue.Status -eq 'Completed') { $hash['expectedColumn'] = 'Done'}
