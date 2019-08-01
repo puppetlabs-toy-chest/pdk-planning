@@ -188,7 +188,7 @@ Function Resize-String($Value, $MaxLength) {
 }
 
 Function Invoke-ParsePDKProject($project) {
-  if ($project.name -notmatch '^Release ([0-9.]+)$') {
+  if ($project.name -notmatch '^Release ([\w ]+)$') {
     Write-Verbose "Project $($project.name) is not a release"
     return
   }
