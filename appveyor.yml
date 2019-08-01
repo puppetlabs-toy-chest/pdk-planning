@@ -1,0 +1,29 @@
+version: '{build}'
+max_jobs: 1
+image: WMF 5
+# We only need the latest
+shallow_clone: true
+branches:
+  only:
+  - master
+
+environment:
+  # Github token to commit pushed packages to repository
+  GITHUB_USERNAME: pdk-bot
+  GITHUB_TOKEN:
+    secure: IUjB8ctqO2KSF954odTdyODM+hc3Rdr1gmXzaD1sy/XODBALJ7TrQe3j5UdIqE2I #https://ci.appveyor.com/tools/encrypt
+
+install:
+- ps: |
+    "Build info"
+    '  {0,-20} {1}' -f 'SCHEDULED BUILD:', ($Env:APPVEYOR_SCHEDULED_BUILD -eq 'true')
+    '  {0,-20} {1}' -f 'FORCED BUILD:'   , ($Env:APPVEYOR_FORCED_BUILD    -eq 'true')
+    '  {0,-20} {1}' -f 'RE BUILD:'       , ($Env:APPVEYOR_RE_BUILD        -eq 'true')
+
+build_script:
+- ps: |
+    $ErrorActionPreference = 'Continue'
+    # Only trigger the project sync on a forced or scheduled build, NOT per PR.
+    if ( ($Env:APPVEYOR_SCHEDULED_BUILD -ne 'true') -and ($Env:APPVEYOR_FORCED_BUILD -ne 'true') ) {
+        .\tools\SyncProjects.ps1
+    }
