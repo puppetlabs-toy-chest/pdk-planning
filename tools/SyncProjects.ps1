@@ -163,6 +163,10 @@ $($issue.Summary)
       }
       # There's probably more than this for in progress...
       if ($Issue.Status -eq 'In progress') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for merge') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for test') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for ci') { $hash['expectedColumn'] = 'In progress'}
+      if ($Issue.Status -eq 'Ready for review') { $hash['expectedColumn'] = 'In progress'}
       if ($Issue.Status -eq 'Closed') { $hash['expectedColumn'] = 'Done'}
       if ($Issue.Status -eq 'Resolved') { $hash['expectedColumn'] = 'Done'}
       if ($Issue.Status -eq 'Completed') { $hash['expectedColumn'] = 'Done'}
@@ -184,7 +188,7 @@ Function Resize-String($Value, $MaxLength) {
 }
 
 Function Invoke-ParsePDKProject($project) {
-  if ($project.name -notmatch '^Release ([0-9.]+)$') {
+  if ($project.name -notmatch '^Release ([\w ]+)$') {
     Write-Verbose "Project $($project.name) is not a release"
     return
   }

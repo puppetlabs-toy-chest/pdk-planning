@@ -19,11 +19,13 @@ install:
     '  {0,-20} {1}' -f 'SCHEDULED BUILD:', ($Env:APPVEYOR_SCHEDULED_BUILD -eq 'true')
     '  {0,-20} {1}' -f 'FORCED BUILD:'   , ($Env:APPVEYOR_FORCED_BUILD    -eq 'true')
     '  {0,-20} {1}' -f 'RE BUILD:'       , ($Env:APPVEYOR_RE_BUILD        -eq 'true')
+    '  {0,-20} {1}' -f 'GITHUB_TOKEN:'   , ($Env:GITHUB_TOKEN             -ne $null)
 
 build_script:
 - ps: |
     $ErrorActionPreference = 'Continue'
+    # Only trigger if the GTIHUB_TOKEN exists
     # Only trigger the project sync on a forced or scheduled build, NOT per PR.
-    if ( ($Env:APPVEYOR_SCHEDULED_BUILD -ne 'true') -and ($Env:APPVEYOR_FORCED_BUILD -ne 'true') ) {
+    if ( ($null -ne $ENV:GITHUB_TOKEN) -and (($Env:APPVEYOR_SCHEDULED_BUILD -eq 'true') -or ($Env:APPVEYOR_FORCED_BUILD -eq 'true')) ) {
         .\tools\SyncProjects.ps1
     }
