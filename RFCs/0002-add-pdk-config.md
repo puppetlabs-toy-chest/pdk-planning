@@ -47,7 +47,7 @@ rake tasks, some of which the PDK invokes.)
 
 Implement a new pdk subcommand, `pdk config` which will offer the following actions:
 
-  - `pdk config [get] [--format=<format>]`
+  - `pdk config get [--format=<format>]`
 
     Lists the complete, currently resolved configuration, merging all available layers of config and presenting the
     formatted results.
