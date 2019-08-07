@@ -47,7 +47,7 @@ rake tasks, some of which the PDK invokes.)
 
 Implement a new pdk subcommand, `pdk config` which will offer the following actions:
 
-  - `pdk config [get] [--format=<format>]`
+  - `pdk config get [--format=<format>]`
 
     Lists the complete, currently resolved configuration, merging all available layers of config and presenting the
     formatted results.
@@ -74,20 +74,20 @@ Implement a new pdk subcommand, `pdk config` which will offer the following acti
 
     ```
     $ pdk config get user.default_template
-    url: https://github.com/puppetlabs/pdk-templates.git
-    ref: master
+    user.default_template.url = https://github.com/puppetlabs/pdk-templates.git
+    user.default_template.ref = master
     ```
 
     You can also supply the `--format` option to control how keys and values are presented:
 
     ```
     $ pdk config get user.default_template.url --format=json
-    { "url": "https://github.com/.../pdk-templates.git" }
+    { "user.default_template.url": "https://github.com/.../pdk-templates.git" }
     ```
 
     ```
     $ pdk config get user.default_template --format=json
-    { "url": "https://github.com/.../pdk-templates.git", "ref": "master" }
+    { "user.default_template.url": "https://github.com/.../pdk-templates.git", "user.default_template.ref": "master" }
     ```
 
   - `pdk config set [--add] <key> <value>`
