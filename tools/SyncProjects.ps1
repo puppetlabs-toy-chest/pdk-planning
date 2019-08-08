@@ -117,7 +117,11 @@ $($issue.title)
 "@
       'expectedColumn' = 'To do'
     }
-    if ($Issue.state -eq 'closed') { $hash['expectedColumn'] = 'Done'} # What about in progress? (Is that a PR versus an Issue?)
+
+    # Consider all open pull requests as "in progress"
+    if ($Issue.pull_request -ne $null) { $hash['expectedColumn'] = 'In progress' }
+    if ($Issue.state -eq 'closed') { $hash['expectedColumn'] = 'Done' }
+
     Write-Output ([PSCustomObject]$hash)
   }
 }
