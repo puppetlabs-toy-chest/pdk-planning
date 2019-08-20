@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/v7w84n21w9yjspq7/branch/master?svg=true)](https://ci.appveyor.com/project/puppetlabs/pdk-planning/branch/master)
+
 # pdk-planning
 
 A repository of roadmaps, feature proposals, and other planning resources for the [Puppet Development Kit].

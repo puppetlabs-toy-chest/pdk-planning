@@ -9,7 +9,7 @@ try {
   Import-Module JiraPS -ErrorAction Stop
 }
 catch {
-  Install-Module JiraPS -ErrorAction Stop
+  Install-Module JiraPS -ErrorAction Stop -RequiredVersion 2.11.1 -Force
   Import-Module JiraPS -ErrorAction Stop
 }
 
