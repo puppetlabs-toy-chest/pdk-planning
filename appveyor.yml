@@ -1,6 +1,6 @@
 version: '{build}'
 max_jobs: 1
-image: WMF 5
+image: Visual Studio 2017
 # We only need the latest
 shallow_clone: true
 branches:
@@ -27,5 +27,5 @@ build_script:
     # Only trigger if the GTIHUB_TOKEN exists
     # Only trigger the project sync on a forced or scheduled build, NOT per PR.
     if ( ($null -ne $ENV:GITHUB_TOKEN) -and (($Env:APPVEYOR_SCHEDULED_BUILD -eq 'true') -or ($Env:APPVEYOR_FORCED_BUILD -eq 'true')) ) {
-        .\tools\SyncProjects.ps1
+      .\tools\SyncProjects.ps1
     }
