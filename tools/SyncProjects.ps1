@@ -103,15 +103,21 @@ Function Get-PDKProjects {
 Function Convert-GHIssueToNote {
   param(
     [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-    [Object]$Issue
+    [Object]$Issue,
+
+    [String]$Prefix = ""
   )
+
+  Begin {
+    if ($Prefix -ne "") { $Prefix = $Prefix + " " }
+  }
 
   Process {
     # We only add the title, because github fills in the description as a rich-link
     $hash = @{
       'cardId'         = -1
       'note'           = @"
-[GitHub Issue $($issue.number)]($($issue.html_url))
+[$($Prefix)GitHub Issue $($issue.number)]($($issue.html_url))
 
 $($issue.title)
 "@
@@ -219,9 +225,12 @@ Function Invoke-ParsePDKProject($project) {
   if ($null -eq $ColumnIds['In progress']) { Write-Warning "Project $($Project.number) is missing expected column 'In progress'"; Return}
   if ($null -eq $ColumnIds['Done']) { Write-Warning "Project $($Project.number) is missing expected column 'Done'"; Return}
 
-  Write-Verbose "Getting current issues in the PDK repo for milestone ${MilestoneName} ..."
   # Get all of the issues for the PDK version milestone
-  $GHIssues = (Invoke-GithubAPIWithPaging -RelativeUri "/search/issues?q=repo:puppetlabs/pdk+milestone:`"${MilestoneName}`"").items | Convert-GHIssueToNote
+  $GHIssues = @()
+  Write-Verbose "Getting current issues in the PDK repo for milestone ${MilestoneName} ..."
+  $GHIssues += ((Invoke-GithubAPIWithPaging -RelativeUri "/search/issues?q=repo:puppetlabs/pdk+milestone:`"${MilestoneName}`"").items | Convert-GHIssueToNote -Prefix 'PDK')
+  Write-Verbose "Getting current issues in the PDK Templates repo for milestone ${MilestoneName} ..."
+  $GHIssues += ((Invoke-GithubAPIWithPaging -RelativeUri "/search/issues?q=repo:puppetlabs/pdk-templates+milestone:`"${MilestoneName}`"").items | Convert-GHIssueToNote -Prefix 'PDK Template')
 
   Write-Verbose "Getting current tickets in the PDK project for fix version ${JiraFixVersion} ..."
   # Get all of the Jira tickets
