@@ -225,15 +225,23 @@ Function Invoke-ParsePDKProject($project) {
   if ($null -eq $ColumnIds['In progress']) { Write-Warning "Project $($Project.number) is missing expected column 'In progress'"; Return}
   if ($null -eq $ColumnIds['Done']) { Write-Warning "Project $($Project.number) is missing expected column 'Done'"; Return}
 
-  # Get all of the issues for the PDK version milestone
+  # Get all of the Github issues for the PDK version milestone
   $GHIssues = @()
+
+  # puppetlabs/pdk
   Write-Verbose "Getting current issues in the PDK repo for milestone ${MilestoneName} ..."
   $GHIssues += ((Invoke-GithubAPIWithPaging -RelativeUri "/search/issues?q=repo:puppetlabs/pdk+milestone:`"${MilestoneName}`"").items | Convert-GHIssueToNote -Prefix 'PDK')
+
+  # puppetlabs/pdk-templates
   Write-Verbose "Getting current issues in the PDK Templates repo for milestone ${MilestoneName} ..."
   $GHIssues += ((Invoke-GithubAPIWithPaging -RelativeUri "/search/issues?q=repo:puppetlabs/pdk-templates+milestone:`"${MilestoneName}`"").items | Convert-GHIssueToNote -Prefix 'PDK Template')
 
-  Write-Verbose "Getting current tickets in the PDK project for fix version ${JiraFixVersion} ..."
+  # puppetlabs/pdk-vanagon
+  Write-Verbose "Getting current issues in the PDK Vanagon repo for milestone ${MilestoneName} ..."
+  $GHIssues += ((Invoke-GithubAPIWithPaging -RelativeUri "/search/issues?q=repo:puppetlabs/pdk-vanagon+milestone:`"${MilestoneName}`"").items | Convert-GHIssueToNote -Prefix 'PDK Packaging')
+
   # Get all of the Jira tickets
+  Write-Verbose "Getting current tickets in the PDK project for fix version ${JiraFixVersion} ..."
   $JiraTickets = Get-JiraIssues -fixVersion $JiraFixVersion
 
   Write-Verbose "Matching Issues to Notes ..."
