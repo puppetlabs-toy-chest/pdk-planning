@@ -10,6 +10,8 @@ Implement various enhancements to the `pdk new task` command to make it easier t
 
 - Since that time, Bolt has continued to grow and evolve, and new helper libraries and best practices for writing Bolt Tasks have emerged.
 
+- See also: https://puppet.com/docs/bolt/latest/writing_tasks.html
+
 ## Motivation & Goals
 
 PDK should provide up-to-date and robust tools for authoring all kinds of Puppet-related content, including Bolt Tasks. The current basic implementation of `pdk new task` can be improved in the following specific ways:
@@ -147,6 +149,8 @@ pdk (INFO): Added implementation 'init.rb' to '/Users/jesse/sandbox/pdk/testmod/
 
 - We should consider ways that PDK could help authors declare their task's file/module dependencies.
 
+- We should consider ways that PDK could help authors with the "Wrapping an existing script" workflow described in the Bolt "Writing Tasks" documentation[^1]
+
 ## Drawbacks
 
 - New options and flags add additional complexity to the user-interface. Some combinations of options and flags may be invalid or have unexpected outcomes that are hard to document in the limited space afforded in command-line `--help` output.
@@ -156,3 +160,5 @@ pdk (INFO): Added implementation 'init.rb' to '/Users/jesse/sandbox/pdk/testmod/
 ## Alternatives
 
 - Considered adding an `--implementations=<implementations>` option instead of using positional arguments to list implementations. Decided that the value of shell-provided tab completion for implementation files and reduced verbosity outweighed the value provided by a more explicit option.
+
+[^1]: https://puppet.com/docs/bolt/latest/writing_tasks.html
