@@ -67,15 +67,283 @@ Note - This is just a list collating all out-of-scope items. A full description 
 
 * Template repositories that are not on the Filesystem or on Github
 
-## Proposed Implementation Design
 
-### Opt-in instead of opt-out
+
+
+## Proposed User Experience
+
+### User Experience as a Template User
+
+**Opt-in instead of opt-out**
 
 Currently the templating will apply everything, and Template Users must opt-out.  The new templating system will use a composition model, that is, a Template User must opt-in to things.
 
-### Easier to discover, and validate, template settings
+**Easier to discover, and validate, template settings**
 
 Currently a Template User needs to read the README _and_ the templates (and even the code itself!) to determine what settings are available or even valid. This also assumes the README is even correct.  The new templating system will have a metadata layer so that users can discover what templates are available to opt-in to. Optionally each template would have a validation layer, to validate template settings.
+
+**Example Future PDK Commands**
+
+To help with the discovery, the Template Engine should have an API to query template information, which can then be consumed by clients.  This would mean the PDK could in the future have commands like:
+
+Note that these are examples only, and are out scope for this RFC.  Later RFCs will discuss the PDK integration and UX when querying the Template Engine.
+
+```
+> pdk list templates
+appveyor_ci
+travis_ci (already in use)
+rubocop
+litmus_tests (already in use)
+
+
+> pdk show template rubocop
+
+rubocop template
+----------------
+
+Description: Lorem ipsum
+
+Settings:
+* selected_profile
+  Description: Lorem ipsum
+  Values: cleanups_only, strict, hardcore, off
+
+* include_todos
+  Description: Lorem ipsum
+  Values: true, false
+
+
+> pdk add template_source filesystem location=/something/somewhere
+
+Added template source. Template sources are now:
+
+  template_sources:
+    -
+      type: filesystem
+      location: "/something/somewhere"
+    - default
+```
+
+
+#### Configuring settings for the Template Engine
+
+A Template User will continue to have a `.sync.yml` file in the root of their project which contains all of the per-project settings required for the template engine
+
+Example `.sync.yml` with V2 settings
+
+``` yaml
+---
+pdk_template:
+  version: 2
+  template_sources:
+    -
+      type: git
+      location: 'https://github.com/user/custom-templates.git'
+    - default
+  templates:
+    - appveyor_ci
+    - travis_ci
+    - rubocop
+    - litmus_tests
+
+gemfile:
+  # Gemfile template customisations
+
+rubocop:
+  # Rubocop template customisations
+
+# and so on ...
+```
+
+#### Multiple template sources
+
+A Template User will be able to specify more than one template source. See [sync.yml reference](#Changes_to_.sync.yml) for more information
+
+### User Experience as a Template Author
+
+
+
+
+
+
+
+## Proposed Implementation Reference
+
+### Changes to `.sync.yml`
+
+Renaming `.sync.yml` is considered out of scope for this RFC.  There is a large body of work already using this file to store per-project settings and renaming it would really be an RFC in of itself.
+
+Each project may contain a `.sync.yml` file which contains the project specific settings when rendering the templates. For the new templates, the .sync.yml will have additional settings, which will also be backwards compatible with the V1 templating engine.
+
+``` yaml
+---
+pdk_template:
+  version: 2
+  template_sources:
+    -
+      type: git
+      location: 'https://github.com/user/custom-templates.git'
+    - default
+  templates:
+    - appveyor_ci
+    - travis_ci
+    - rubocop
+    - litmus_tests
+
+gemfile:
+  # Gemfile template customisations
+
+rubocop:
+  # Rubocop template customisations
+
+# and so on ...
+```
+
+* Root `pdk_template` element
+
+  The new `pdk_template` element will hold all of the data for templating engine. Due to being backwards compatible the verbose name of `pdk_template` is used instead of the generic name `template`, so that it would probably not conflict with any known files.  For example, Puppet modules have a `templates` directory.
+
+  * `version` element (Integer) (**Required**)
+
+  Which version of the templating engine this module uses. If the template specifies a version that the templating engine does not support it is expected the engine will raise a terminating error.
+
+  Note that the type here is an integer. Although we could use a semver (Semantic Versioning) based string here, that would make parsing difficult.
+
+* `template_sources` element (Array of String)
+
+  A list of places to find Template Repositories. Order is important. If the same template (specifically the same template directory name) is specified in two sources, then the top-most source will be used ("First one wins")
+
+  Support source types:
+  * Filesystem based repository
+
+    A directory on disk can be specified as a Template Repository.
+
+  * Git based repository
+
+    A git repository (For example Github, GitLab or in internal git repo)
+
+  * `default`
+
+    This special source type will use whatever the Template Engine considers the default.  In the case of the PDK, this would be the cached `pdk-templates` repo that is packaged as part of the PDK. Other tools using the Template Engine may specify a different location.
+
+  If no template sources are specified `default` is used.
+
+* `templates` element (Array of string). List of templates (The template directory name) to be applied **IN ORDER** (Order is important.  See [Resolution Order](#resolution_order))
+
+Example V1 `.sync.yml`
+
+``` yaml
+---
+Gemfile:
+  # Gemfile template customisations
+
+.rubocop.yml:
+  # Rubocop template customisations
+
+# ... etc
+```
+
+Example `.sync.yml` with V2 settings
+
+``` yaml
+---
+pdk_template:
+  version: 2
+  template_sources:
+    -
+      type: git
+      location: 'https://github.com/user/custom-templates.git'
+    - default
+  templates:
+    - appveyor_ci
+    - travis_ci
+    - rubocop
+    - litmus_tests
+
+gemfile:
+  # Gemfile template customisations
+
+rubocop:
+  # Rubocop template customisations
+
+# ... etc
+```
+
+A Template User will be able to use one or more template sources
+
+#### Using a default template source
+
+``` yaml
+---
+pdk_template:
+  template_sources:
+    - default
+```
+
+Uses the default location as determined by the Template Engine. For example the PDK would use it's packaged template location for packaged PDK distributions, but use the Git based one for gem based PDK distributions
+
+#### Using a git based template source
+
+``` yaml
+---
+pdk_template:
+  template_sources:
+    -
+      type: git
+      location: 'https://github.com/user/custom-templates.git'
+      ref: master
+```
+
+| YAML Element | Description |
+| ------------ | ----------- |
+| type         | Must be `git` |
+| location     | The git remote to clone |
+| ref          | (Optional) The git reference to checkout. Default is what the git remote deems the default branch |
+
+#### Using a filesystem based template sources
+
+Example:
+
+``` yaml
+---
+pdk_template:
+  template_sources:
+    -
+      type: filesystem
+      location: 'C:/templates/custom'
+    #  Unix style path
+    # -
+    #   type: filesystem
+    #   location: '/templates/custom'
+```
+
+| YAML Element | Description |
+| ------------ | ----------- |
+| type         | Must be `filesystem` |
+| location     | Absolute path to the template source |
+
+
+
+
+
+
+
+
+<!-- ############################################################################################# -->
+
+
+
+
+
+
+
+
+
+
+
+## Proposed Implementation Design
+
+
 
 ### File locations
 
