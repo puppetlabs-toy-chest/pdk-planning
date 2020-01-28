@@ -18,8 +18,6 @@ PDK should provide up-to-date and robust tools for authoring all kinds of Puppet
 
 - Users should be able to specify what language they plan to implement a new task in and PDK should generate a language-appropriate scaffold.
 
-- Users should be able to easily convert existing scripts into Bolt Tasks using PDK.
-
 - Users should be able to more easily author "cross-platform" and "shared implementation" tasks.
 
 ## Proposed Implementation Design
@@ -31,6 +29,8 @@ PDK should provide up-to-date and robust tools for authoring all kinds of Puppet
 - Add templates for Bash, PowerShell, Ruby, and Python.
 
 - Ruby and Python templates should have scaffold implementations based on those languages Bolt Task helper libraries. (https://github.com/puppetlabs/puppetlabs-ruby_task_helper and https://github.com/puppetlabs/puppetlabs-python_task_helper)
+
+- When a new task is added with `--language` set to `ruby` or `python`, PDK should ensure that the module's `metadata.json` has a dependency on the relevant Bolt Task helper library module. (`puppetlabs-ruby_task_helper` and `puppetlabs-python_task_helper`)
 
 - Ideally, users could configure a default task language as a module-specific configuration option.
 
@@ -65,20 +65,6 @@ pdk (INFO): Creating '/Users/jesse/sandbox/pdk/testmod/tasks/my_ps_task.ps1' fro
 pdk (INFO): Creating '/Users/jesse/sandbox/pdk/testmod/tasks/my_ps_task.json' from template.
 ```
 
-### Add `--from` option to `pdk new task`
-
-- The new `--from` option will require an argument which is an absolute or relative path to an existing script file.
-
-- If the `--from` option is specified without an argument, PDK will exit with an error.
-
-- If the given file does not exist or is not readable, PDK will exit with an error.
-
-- If the given file exists and is readable, PDK will copy it into the `tasks` subdirectory of the current module and write the copy with a name matching the task name supplied to `pdk new task`.
-
-  - For example: `pdk new task --from=/tmp/myscript.sh restart` will copy `/tmp/myscript.sh` to `tasks/restart.sh`.
-
-- For languages that support it (currently only PowerShell?), PDK will attempt to automatically determine the parameters (and output format?) of the source script and use that data to automatically populate the Bolt Task metadata file.
-
 ### Add `--private` and `--remote` flags to `pdk new task`
 
 - When specified, these flags will simply pre-populate the generated Bolt Task metadata with `"private": true` and `"remote": true` key/value pairs respectively.
@@ -87,7 +73,7 @@ pdk (INFO): Creating '/Users/jesse/sandbox/pdk/testmod/tasks/my_ps_task.json' fr
 
 - Allow `pdk new task` to accept an unbounded, space-separated list of `implementations` to be provided after the task name.
 
-- When one or more implementation files are provided, PDK will only generate a `tasks/<taskname>.json` file for the new task. The generated metadata will contain an `"implementations"` key with each given implementation file listed.
+- When one or more implementation files are provided, PDK will only generate a `tasks/<taskname>.json` file for the new task. The generated metadata will contain an `"implementations"` key with each given implementation file listed. Each `implementation` item will have a templated `requirements` key with a placeholder value.
 
 - If the `--language` option is provided at the same time as one or more `<implementation>` arguments, PDK should exit with an appropriate error message.
 
