@@ -221,7 +221,7 @@ Setting precedence is discussed in more detail below.
 
 #### User/Local Config
 
-The values for these config keys will be persisted in ~/.pdk/config (`%LOCALAPPDATA%\PDK\config` on Windows).
+The values for these config keys will be persisted in `~/.config/pdk/user_config.json` (`%LOCALAPPDATA%\PDK\user_config.json` on Windows).
 They are intended to be developer-specific settings and will not apply to another developer working on the same codebase.
 
 | Key | Description |
