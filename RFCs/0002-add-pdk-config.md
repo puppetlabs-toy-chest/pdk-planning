@@ -91,15 +91,17 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
     { "user.default_template.url": "https://github.com/.../pdk-templates.git", "user.default_template.ref": "master" }
     ```
 
-  - `pdk set config [--add] <key> <value>`
+  - `pdk set config [--type|--as <typename>] [--force] <key> [<value>]`
 
     Sets, updates, or adds to the value(s) in the given configuration key and outputs the new value(s).
 
-    If `<key>` is not a leaf node, exits non-zero with an error message.
+    Note that while `<value>` is optional, it can only be omitted in special cases.  For normal usage `<value>` is required.
+
+    If `<key>` is not a leaf node, create an equivalent hash structure.
 
     If `<key>` already has a value set, issues a notice before replacing existing value.
 
-    If `<key>` is designed to store multiple values (e.g. a list):
+    If `<key>` is designed to store multiple values (e.g. a list or an array) and `--force` is not used:
 
       - If the current value list is empty, set the first value in the list to the provided `<value>`.
 
@@ -109,9 +111,35 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
       - If `<value>` is already present in the value list, issues a notice that value was already on list, outputs the
         current values of `<key>`, and exits with a success status.
 
-    If `<key>` is a user-defined configuration key where we cannot infer whether or not it can have multiple values,
-    assume it is a single-value key unless the user includes the `--add` flag. If the user includes the `--add` flag,
-    treat it as a multi-value key as described above.
+    If the `--force` flag is set then the `<key>` will be literally set to `<value>`.  That is, list modifications like above will not be used.
+    This flag is useful when resetting configuration to a known good state, or when automating the PDK to configure projects on first use.
+
+    If `<key>` is a configuration key where we cannot infer what type of value it should be, the user can include the `--type` (aliased with `--as`) flag
+    to indicate what type of value it should be. The included types are those common to JSON and YAML documents (String, Number, Boolean, Array, Hash and Null)
+
+      - `--type number`. Treats the value as a number. For example `1`, `1.0`, `-1.0`
+
+      - `--type boolean`. Treats the value as a boolean (True/False). For example `true`, `TRUE`, `False`, `yes`, `no`, `0` (False), `-1` (True)
+
+      - `--type array`. Treats the value as a array element.  For example `value` would become an array with a single string element of value, that is `["value"]`
+
+      - `--type array`. If given no value, treats the value as an empty array, that is `[]`
+
+      - `--type empty|nil|null|nul`. See [Future Considerations](#future-considerations)
+
+      - `--type string`. The default type for any value.
+
+        Note that `--type hash` does not exist, as this is implied using the `<key>`, for example a key of `setting.a.b.c` will create a Hash like
+
+        ``` json
+        "setting": {
+          "a": {
+            "b": {
+              "c": "<value>"
+            }
+          }
+        }
+        ```
 
     Basic usage examples:
 
@@ -157,21 +185,31 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
       banana
       ```
 
-    - User-defined key, initial value:
+    - User-defined key, initial, add, then force a value:
 
       ```
-      $ pdk set config module.x.example strawberry
-      pdk (INFO): Set initial value of modle.x.example to "strawberry"
+      $ pdk set config --type array module.x.example strawberry
+      pdk (INFO): Set initial value of module.x.example to array with item "strawberry"
       strawberry
-      ```
 
-    - User-defined key, append value:
-
-      ```
-      $ pdk set config --add module.x.example orange
+      $ pdk set config module.x.example orange
       pdk (INFO): Added new value "orange" to module.x.example
       strawberry
       orange
+
+      $ pdk set config --type boolean --force module.x.example Yes
+      pdk (INFO): Set initial value of module.x.example to true
+      true
+      ```
+
+    - Invalid type conversion:
+
+      ```
+      $ pdk set config --type boolean module.x.example strawberry
+      pdk (ERROR): Unable to convert 'strawberry' into a boolean
+
+      $ pdk set config --type number module.x.example strawberry
+      pdk (ERROR): Unable to convert 'strawberry' into a number
       ```
 
   - `pdk remove config <key> [<value>|--all]`
@@ -295,6 +333,8 @@ It is expected that there will be few, if at all, settings that makes sense in t
 
 - We should ensure that the key/value structure we set up is sufficiently extensible for future PDK functionality such
   as control-repo administration, etc.
+
+- `--type empty|nil|null|nul`  In the future, the PDK may distinguish between an empty or nul value versus a missing value. This could be done using the `--type` keyword.
 
 ## Drawbacks
 
