@@ -18,9 +18,12 @@ A repository of roadmaps, feature proposals, and other planning resources for th
 - Offer a single, coherent, and beautiful user interface to the best Puppet development tools
 - Enable anyone to have a robust and native Puppet development environment as quickly and easily as possible
 
-## Roadmap
+## Roadmap & Planning
 
-[Current Roadmap](ROADMAP.md)
+We do not maintain a long term roadmap for the PDK project, however we do plan specifically for the next 1-2 releases
+and track major feature work in our [PDK Release Planning] Google Doc.
+
+You can also see a complete view of in-progress work for the next 1-2 releases on this repository's [project boards].
 
 ## RFCs
 
@@ -120,6 +123,8 @@ already working on it, feel free to ask (e.g. by leaving a comment on the associ
 [Roadmap]: #roadmap
 [Project Goals]: #project-goals
 [RFCs]: #rfcs
+[PDK Release Planning]: https://docs.google.com/document/d/1IwBuspdY4wgTDSjFE3Ow9B5_U-TdYvdo3NdbuDPjOs4
+[project boards]: https://github.com/puppetlabs/pdk-planning/projects
 [Puppet Development Kit]: https://github.com/puppetlabs/pdk
 [templates]: https://github.com/puppetlabs/pdk-templates
 [packaging configuration]: https://github.com/puppetlabs/pdk-vanagon
