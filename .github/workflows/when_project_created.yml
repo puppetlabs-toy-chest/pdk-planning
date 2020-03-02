@@ -15,7 +15,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PDKBOT_GITHUB_TOKEN }}
         run: |
-          mkdir -p /home/runner && ln -s /github/home/.rubies /home/runner/
+          [ ! -d /home/runner/.rubies ] && mkdir -p /home/runner && ln -s /github/home/.rubies /home/runner/
           gem install bundler --version 2.0.2 --no-document
           cd tools
           bundle install --without development --jobs 4 --retry 3
