@@ -212,7 +212,7 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
       pdk (ERROR): Unable to convert 'strawberry' into a number
       ```
 
-  - `pdk remove config <key> [<value>|--all]`
+  - `pdk remove config <key> [<value>|--force]`
 
     Unset one more more values from the given configuration key.
 
@@ -222,25 +222,115 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
 
     If `<key>` currently stores a single value:
 
-      - If no `<value>` is provided, unsets existing value.
+      - If no `<value>` is provided, unsets `<key>`.
 
-      - If provided `<value>` matches existing value, unsets existing value.
+      - If provided `<value>`, ignores `<value>` and unsets `<key>`
 
-      - If provided `<value>` does not match existing value, exits non-zero with an error message.
-
-      - If passed `--all` in place of a value, unsets existing value.
+      - If provided `--force`, issues an info message, and unsets `<key>`
 
     If `<key>` currently stores multiple values:
 
-      - If no `<value>` is provided, exit non-zero with an error message indicating user must pass `--all` if they want
-        to clear all values for the key.
+      - If no `<value>` is provided, clears all elements in `<key>`
 
-      - If provided `<value>` is present in the list of values for `<key>`, removes value from list.
+      - If provided `<value>` is present in the list of values for `<key>`, removes value from list. This is matched via string conversion. Unlike `pdk set` there is type conversion available.
 
       - If provided `<value>` is not present in the list of values for `<key>`, issues a warning but exits with a
         success status.
 
-      - If passed `--all` in place of a value, empties the list of all existing values.
+      - If passed `--force`, unsets `<key>`
+
+    Settings with default values create an interesting UX problem. For example, let's say we have a setting called `user.setting` with a default value of `default-string`. When I run `pdk get config` I end up with:
+
+    ```
+    $ pdk get config
+    ...
+    user.setting=default-string
+    ```
+
+    But if I try to remove the setting, and then get its value:
+
+    ```
+    $ pdk remove config user.setting
+    pdk (INFO): Removed 'user.setting' which had a value of 'default-string'
+    user.setting=
+
+    $ be pdk get config
+    ...
+    user.setting=default-string
+    ```
+
+    This makes no sense as I just removed it, why is it back?  The current UX for the configuration system does not tell the user whether a setting is defaulted or explicitly set. So the UX for the `pdk remove config` command must also take into account default values. It should log a message to the user that it attempted to remove the setting, but it is now using a default value. An example is shown below in the "Basic usage examples"
+
+    Basic usage examples:
+
+    - Known single value key, initial value:
+
+      ```
+      $ pdk remove config user.setting
+      pdk (INFO): Removed 'user.setting' which had a value of 'http://somewhere'
+      user.setting=
+      ```
+
+    - A key that doesn't exist
+
+      ```
+      $ pdk remove config user.missing-setting
+      pdk (INFO): Could not remove 'user.missing-setting' as it has not been set
+      ```
+
+    - Removing a single value from an array
+
+      ```
+      $ pdk remove config user.animal kangaroo
+      pdk (INFO): Removed 'kangaroo' from 'user.animal'
+      user.animal=["quokka"]
+      ```
+
+    - Removing all values from an array
+
+      ```
+      $ pdk remove config user.animal
+      pdk (INFO): Cleared 'user.animal' which had a value of '["quokka", "kangaroo"]'
+      user.animal=[]
+      ```
+
+    - Removing an array
+
+      ```
+      $ pdk remove config user.animal --force
+      pdk (INFO): Removed 'user.animal' which had a value of '["quokka", "kangaroo"]'
+      user.animal=
+      ```
+
+    - Removing part of a hash
+
+      ```
+      $ pdk get config user.setting
+      {"foo"=>"bar", "hash"=>{"animals"=>["quokka"]}}
+
+      $ pdk remove config user.setting.hash
+      pdk (INFO): Removed 'user.setting.hash' which had a value of '{"animals"=>["quokka"]}'
+      user.setting.hash=
+
+      $pdk get config user.setting
+      {"foo"=>"bar"}
+      ```
+
+    - Removing a setting that has a default value:
+
+      ```
+      $ pdk get config
+      ...
+      user.setting=current-value
+
+      $ pdk remove config user.setting
+      pdk (INFO): Could not remove 'user.setting' as it using a default value of 'default-string'
+      user.setting=default-string
+
+      $ pdk get config
+      ...
+      user.setting=default-string
+      ```
 
 ### Proposed Configuration Keys
 
