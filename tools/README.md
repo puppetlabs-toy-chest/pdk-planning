@@ -58,11 +58,19 @@ pwsh -File tools/SyncProjects.ps1
 
 which will inherit your parent shell's environment variables (such as previously exported `GITHUB_USERNAME/TOKEN`).
 
-## when\_projects\_created.rb (Github Workflow Script)
+## when\_project\_created.rb (Github Workflow Script)
 
 This ruby script is attached to a Github workflow (see `.github/workflows/when_project_created.yml`) which responds
 to a new project being created in the `pdk-planning` repo and, if the new project name matches `/\ARelease /` it
 will create the appropriate Milestones in the `pdk`, `pdk-templates`, and `pdk-vanagon` repos.
+
+## when\_project\_closed.rb (Github Workflow Script)
+
+This ruby script is attached to a Github workflow (see `.github/workflows/when_project_closed.yml`) which responds
+to a project being closed in the `pdk-planning` repo and, if the project name matches `/\ARelease /` it
+will close all the related Milestones in the `pdk`, `pdk-templates`, and `pdk-vanagon` repos.
+
+## How to test the Github workflows/actions
 
 ### How to test the standalone script
 
@@ -89,7 +97,7 @@ You will need Docker and the [`act`](https://github.com/nektos/act#installation)
 Run the following from the _root_ of this repo:
 
 ```
-~/pdk-planning $ act -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s PDKBOT_GITHUB_TOKEN=$GITHUB_TOKEN -e tools/fixtures/gh_new_release_project_created.json
+~/pdk-planning $ act project -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s PDKBOT_GITHUB_TOKEN=$GITHUB_TOKEN -e tools/fixtures/gh_new_release_project_created.json
 ```
 
 Note that you still need a valid `GITHUB_TOKEN` set.

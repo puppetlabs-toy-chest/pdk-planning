@@ -1,0 +1,22 @@
+name: Project Closed
+
+on:
+  project:
+    types: [closed]
+
+jobs:
+  run_ruby_project_closed:
+    name: Run when_project_closed.rb
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1.20.1 # Reads from .ruby-version
+      - name: when_project_closed.rb
+        env:
+          GITHUB_TOKEN: ${{ secrets.PDKBOT_GITHUB_TOKEN }}
+        run: |
+          [ ! -d /home/runner/.rubies ] && mkdir -p /home/runner && ln -s /github/home/.rubies /home/runner/
+          gem install bundler --version 2.0.2 --no-document
+          cd tools
+          bundle install --without development --jobs 4 --retry 3
+          bundle exec when_project_closed.rb
