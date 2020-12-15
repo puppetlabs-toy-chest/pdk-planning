@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ruby/setup-ruby@v1.20.1 # Reads from .ruby-version
+      - uses: ruby/setup-ruby@v1.59.1
+        with:
+          ruby-version: 2.6
       - name: when_project_created.rb
         env:
           GITHUB_TOKEN: ${{ secrets.PDKBOT_GITHUB_TOKEN }}

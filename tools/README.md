@@ -97,7 +97,7 @@ You will need Docker and the [`act`](https://github.com/nektos/act#installation)
 Run the following from the _root_ of this repo:
 
 ```
-~/pdk-planning $ act project -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s PDKBOT_GITHUB_TOKEN=$GITHUB_TOKEN -e tools/fixtures/gh_new_release_project_created.json
+~/pdk-planning $ act project -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s PDKBOT_GITHUB_TOKEN=$GITHUB_TOKEN -e tools/fixtures/gh_new_release_project_created.json --env-file tools/env-for-act
 ```
 
 Note that you still need a valid `GITHUB_TOKEN` set.
