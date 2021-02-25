@@ -20,7 +20,7 @@ Implement a new flag, `--puppet-dev`, to the `pdk test unit` and `pdk validate` 
 
 - `pdk validate --puppet-dev`
 
-  Validates metadata and puppet code against the Puppet source on the `master` branch on GitHub.
+  Validates metadata and puppet code against the Puppet source on the `main` branch on GitHub.
 
   If `--puppet-version` or `--pe-version` is specified in addition to `--puppet-dev` this will result in an invalid options error, and return a non-zero exit code.
 
@@ -28,7 +28,7 @@ Implement a new flag, `--puppet-dev`, to the `pdk test unit` and `pdk validate` 
 
 - `pdk test unit --puppet-dev`
 
-  Runs unit tests against the Puppet source on the `master` branch on GitHub.
+  Runs unit tests against the Puppet source on the `main` branch on GitHub.
 
   If `--puppet-version` or `--pe-version` is specified in addition to `--puppet-dev` this will result in an invalid options error, and return a non-zero exit code.
 

@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/v7w84n21w9yjspq7/branch/master?svg=true)](https://ci.appveyor.com/project/puppetlabs/pdk-planning/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/v7w84n21w9yjspq7/branch/main?svg=true)](https://ci.appveyor.com/project/puppetlabs/pdk-planning/branch/main)
 
 # pdk-planning
 
