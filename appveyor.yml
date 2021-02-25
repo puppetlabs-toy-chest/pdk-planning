@@ -5,7 +5,7 @@ image: Visual Studio 2017
 shallow_clone: true
 branches:
   only:
-  - master
+  - main
 
 environment:
   # Github token to commit pushed packages to repository
