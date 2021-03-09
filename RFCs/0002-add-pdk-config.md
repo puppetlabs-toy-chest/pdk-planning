@@ -76,7 +76,7 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
     ```
     $ pdk get config user.default_template
     user.default_template.url = https://github.com/puppetlabs/pdk-templates.git
-    user.default_template.ref = master
+    user.default_template.ref = main
     ```
 
     You can also supply the `--format` option to control how keys and values are presented:
@@ -88,7 +88,7 @@ Ref: (Verb-Noun Reference)[https://docs.google.com/document/d/1zX0FJBAvAIK3d3L3Q
 
     ```
     $ pdk get config user.default_template --format=json
-    { "user.default_template.url": "https://github.com/.../pdk-templates.git", "user.default_template.ref": "master" }
+    { "user.default_template.url": "https://github.com/.../pdk-templates.git", "user.default_template.ref": "main" }
     ```
 
   - `pdk set config [--type|--as <typename>] [--force] <key> [<value>]`

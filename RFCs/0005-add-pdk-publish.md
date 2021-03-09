@@ -3,7 +3,7 @@
 ## Summary
 
 Add a new `pdk publish` subcommand that allows publishing a given module tarball to the Forge.  
-*Note that this RFC supersedes [RFC-0003](https://github.com/puppetlabs/pdk-planning/blob/master/RFCs/0003-add-pdk-release.md). While RFC-0003 may eventually still be implemented (likely as part of a PDK 2.x major release), this work represents a smaller scope that is more appropriate to the current PDK 1.x series.*
+*Note that this RFC supersedes [RFC-0003](https://github.com/puppetlabs/pdk-planning/blob/main/RFCs/0003-add-pdk-release.md). While RFC-0003 may eventually still be implemented (likely as part of a PDK 2.x major release), this work represents a smaller scope that is more appropriate to the current PDK 1.x series.*
 
 ## Background & Assumptions
 
